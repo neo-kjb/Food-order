@@ -30,6 +30,27 @@ const cartReducer = (state, action) => {
       totalAmount: updatedTotalAmount,
     };
   }
+
+  if (action.type === "REMOVE") {
+    const cartItems = state.items;
+    const existingCartItemIndex = cartItems.findIndex(
+      (item) => item.id === action.id
+    );
+    const existingItem = cartItems[existingCartItemIndex];
+    const updatedTotalAmount = state.totalAmount - existingItem.price;
+    let updatedItems;
+    if (existingItem.amount === 1) {
+      updatedItems = cartItems.filter((item) => item.id !== action.id);
+    } else {
+      const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+      updatedItems = [...cartItems];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    }
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
+  }
   return defaultCartState;
 };
 
@@ -44,7 +65,7 @@ export default function CartProvider({ children }) {
   };
 
   const removeItemFromCartHandler = (id) => {
-    dispatchCartAction({ type: "REMOVOE", id });
+    dispatchCartAction({ type: "REMOVE", id });
   };
 
   const cartContext = {
