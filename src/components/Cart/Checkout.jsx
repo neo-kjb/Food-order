@@ -5,7 +5,7 @@ const isEmpty = (value) => value.trim() === "";
 
 const isFiveChars = (value) => value.trim().length === 5;
 
-export default function Checkout({ onCancel }) {
+export default function Checkout({ onCancel, onOrder }) {
   const [formValidity, setFormValidity] = useState({
     name: true,
     street: true,
@@ -47,6 +47,13 @@ export default function Checkout({ onCancel }) {
     if (!formIsValid) {
       return;
     }
+
+    onOrder({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostal,
+    });
   };
 
   return (

@@ -34,6 +34,14 @@ export default function Cart({ onClose }) {
       ))}
     </ul>
   );
+
+  const submitOrderHandler = (userData) => {
+    fetch("https://more-hooks-default-rtdb.firebaseio.com/orders.json", {
+      method: "POST",
+      body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
+    });
+  };
+
   return (
     <Modal onClose={onClose}>
       {cartItems}
@@ -41,7 +49,9 @@ export default function Cart({ onClose }) {
         <span>Total Amount</span>
         <span>{`$${cartCtx.totalAmount.toFixed(2)}`}</span>
       </div>
-      {isCheckout && <Checkout onCancel={onClose} />}
+      {isCheckout && (
+        <Checkout onOrder={submitOrderHandler} onCancel={onClose} />
+      )}
       {!isCheckout && (
         <div className={styles.actions}>
           <button className={styles["button--alt"]} onClick={onClose}>
